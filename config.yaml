@@ -1,0 +1,9 @@
+SERVER_ADDR: 0.0.0.0:3000
+
+DB_HOST: localhost
+DB_USER: postgres
+DB_PASSWORD: 12345678
+DB_DBNAME: postgres
+DB_PORT: 5678
+DB_SSLMODE: disable
+DB_TIMEZONE: Asia/Bangkok

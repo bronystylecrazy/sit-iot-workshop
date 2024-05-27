@@ -1,0 +1,301 @@
+basePath: /api
+definitions:
+  CreateTaskRequest:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  CreateUserRequest:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      seat:
+        type: string
+    required:
+    - firstname
+    - lastname
+    - seat
+    type: object
+  LoginRequest:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      seat_code:
+        type: string
+    type: object
+  Task:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  User:
+    properties:
+      created_at:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      seat:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - firstname
+    - id
+    - lastname
+    - seat
+    type: object
+  model.Step:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      task_id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.User:
+    properties:
+      created_at:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      seat:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    name: Sirawit Pratoomsuwan
+  title: SIT IoT Workshop API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      operationId: login
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: Login
+      tags:
+      - auth
+  /auth/me:
+    get:
+      operationId: me
+      parameters:
+      - description: Seat code
+        in: query
+        name: seat_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: Get current user
+      tags:
+      - auth
+  /tasks:
+    get:
+      operationId: getTasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Task'
+            type: array
+      summary: Get all tasks
+      tags:
+      - task
+    post:
+      consumes:
+      - application/json
+      operationId: createTask
+      parameters:
+      - description: Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Create a new task
+      tags:
+      - task
+  /tasks/{task_id}/steps:
+    get:
+      operationId: getStepsByTaskID
+      parameters:
+      - description: Task ID
+        in: path
+        name: task_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Step'
+            type: array
+      summary: Get steps by task ID
+      tags:
+      - user
+  /users:
+    get:
+      operationId: getUsers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/User'
+            type: array
+      summary: Get all users
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      operationId: createUser
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Create a new user
+      tags:
+      - user
+  /users/{user_id}/steps:
+    delete:
+      operationId: markAsUndone
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: query
+        name: task_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Mark step as undone
+      tags:
+      - user
+    get:
+      operationId: getStepsByUserID
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Step'
+            type: array
+      summary: Get steps by user ID
+      tags:
+      - user
+    post:
+      operationId: markStepAsDone
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Task ID
+        in: query
+        name: task_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Mark step as done
+      tags:
+      - user
+swagger: "2.0"
